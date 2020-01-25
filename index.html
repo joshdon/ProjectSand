@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+
+<html lang="en-US">
+
+<head>
+  <link rel="stylesheet" type="text/css" href="styles.css" media="screen" />
+  <title>Project Sand</title>
+  <meta name="keywords" content="sand, falling, game" />
+  <meta name="description" content="Project Sand: A modern version of the classic Hell of Sand Falling Game" />
+  <meta name="subject" content="Project Sand" />
+  <meta charset="UTF-8">
+  <meta name="google" content="notranslate">
+  <meta http-equiv="Content-Language" content="en">
+  <link rel="icon" href="assets/favicon.ico" type="image/x-icon" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155147592-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-155147592-1');
+  </script>
+</head>
+
+<div class="wrapper" id="gameWrapper">
+  <div id="titleWrapper">
+    <h1 class="title">Project Sand</h1>
+    <div class="subheader">
+      <div class="column-left">
+        <a href="https://github.com/joshdon/ProjectSand" target="_blank">Source Code</a>
+      </div>
+      <div class="column-center">
+        By: Josh Don
+      </div>
+      <div class="column-right">
+        <a href="http://androdome.com/Sand/" target="_blank">Original Applets</a>
+      </div>
+    </div>
+
+    <div class="subheader">
+      <ul>
+        <li> Tip: You can zoom in and refresh the page for a larger canvas</li>
+      </ul>
+    </div>
+  </div>
+
+  <canvas id="mainCanvas">Your browser doesn't support HTML5 canvas.</canvas>
+  <div id="menuWrapper">
+    <table id="elementTable">
+    </table>
+    <div id="optionsCol1" class="optionsCol">
+      <div id="penSizeDiv">
+        <label for="pensize">Pen Size</label>
+        <select id="pensize"></select>
+      </div>
+      <div>
+        <select id="spigot1Type" class="spigotType"></select>
+        <select id="spigot1Size"></select>
+      </div>
+      <div>
+        <select id="spigot2Type" class="spigotType"></select>
+        <select id="spigot2Size"></select>
+      </div>
+      <div>
+        <select id="spigot3Type" class="spigotType"></select>
+        <select id="spigot3Size"></select>
+      </div>
+      <div>
+        <select id="spigot4Type" class="spigotType"></select>
+        <select id="spigot4Size"></select>
+      </div>
+    </div>
+    <div id="optionsCol2" class="optionsCol">
+      <div>
+        <label for="overwriteCheckbox">Overwrite</label>
+        <input type="checkbox" id="overwriteCheckbox">
+      </div>
+      <div id="speedSliderDiv">
+        <label for="speedSlider">Speed</label>
+        <input type="range" id="speedSlider">
+      </div>
+      <div id="clearButtonDiv" class="optionButtonContainer">
+        <input id="clearButton" class="optionButton" type="button" value="Clear">
+      </div>
+      <div class="optionButtonContainer">
+        <input id="saveButton" class="optionButton" type="button" value="Save">
+        <input id="loadButton" class="optionButton" type="button" value="Load">
+      </div>
+    </div>
+    <div id="fps-counter">
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript" src="scripts/util.js"></script>
+<script type="text/javascript" src="scripts/canvasConfig.js"></script>
+<script type="text/javascript" src="scripts/cursor.js"></script>
+<script type="text/javascript" src="scripts/particles.js"></script>
+<script type="text/javascript" src="scripts/elements.js"></script>
+<script type="text/javascript" src="scripts/spigots.js"></script>
+<script type="text/javascript" src="scripts/menu.js"></script>
+<script type="text/javascript" src="scripts/game.js"></script>
+
+</html>
