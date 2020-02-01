@@ -45,6 +45,7 @@ const gameImagedata32 = new Uint32Array(gameImagedata.data.buffer);
 
 /* Storage for game save state. */
 const saveGameImagedata32 = new Uint32Array(gameImagedata32.length);
+var gamestateSaved = false;
 
 /* Cached for performance */
 const MAX_X_IDX = width - 1;
@@ -194,9 +195,14 @@ function saveGameCanvas() {
   const iterEnd = MAX_IDX + 1;
   for (var i = 0; i !== iterEnd; i++)
     saveGameImagedata32[i] = gameImagedata32[i];
+
+  gamestateSaved = true;
 }
 
 function loadGameCanvas() {
+  if (!gamestateSaved)
+    return;
+
   particles.inactivateAll();
 
   const iterEnd = MAX_IDX + 1;
