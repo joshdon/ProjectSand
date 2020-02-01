@@ -11,6 +11,8 @@ I'm calling my version of the game "Project Sand".  I did my best to replicate t
 
 If you'd like to watch a short history of the development of the game, click [here](https://youtu.be/8J9ljXbWR8k).
 
+See also [TIPS.md](TIPS.md) for some extra hints while playing the game.
+
 Technical Details
 ----------
 
