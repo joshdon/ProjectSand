@@ -1006,7 +1006,7 @@ function LEAF_ACTION(x, y, i) {
     }
   }
 
-  if (random() < 1 && random() < 12) doProducer(x, y, i, POLLEN, false, 100);
+  if (random() < 1 && random() < 9) doProducer(x, y, i, POLLEN, false, 100);
 }
 
 function POLLEN_ACTION(x, y, i) {
