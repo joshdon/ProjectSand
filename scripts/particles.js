@@ -442,7 +442,7 @@ function TREE_PARTICLE_INIT(particle) {
   particle.branches = 0;
 
   /* make it more likely to be a standard tree */
-  if (random() < 70) {
+  if (random() < 62) {
     particle.treeType = 0;
   } else {
     particle.treeType = 1 + Math.floor(Math.random() * NUM_TREE_TYPES - 1);
