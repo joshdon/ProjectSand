@@ -656,15 +656,15 @@ function initCursors() {
   };
 
   const touchCursor = new TouchCursor(onscreenCanvas);
-  onscreenCanvas.ontouchstart = function(e) {
+  onscreenCanvas.addEventListener('touchstart', function(e) {
     touchCursor.canvasTouchStart(e);
-  };
-  onscreenCanvas.ontouchend = function(e) {
+  });
+  onscreenCanvas.addEventListener('touchend', function(e) {
     touchCursor.canvasTouchEnd(e);
-  };
-  onscreenCanvas.ontouchmove = function(e) {
+  });
+  onscreenCanvas.addEventListener('touchmove', function(e) {
     touchCursor.canvasTouchMove(e);
-  };
+  });
 
   CURSORS.push(mouseCursor);
   CURSORS.push(touchCursor);
