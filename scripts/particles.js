@@ -40,7 +40,7 @@
 /* Offscreen canvas for drawing particles */
 const offscreenParticleCanvas = document.createElement("canvas");
 const offscreenParticleCtx = offscreenParticleCanvas.getContext("2d", {
-  alpha: false
+  alpha: false,
 });
 
 /* These values index into __particleInit and __particleActions arrays */
@@ -67,7 +67,7 @@ const __particleInit = [
   METHANE_PARTICLE_INIT,
   TREE_PARTICLE_INIT,
   CHARGED_NITRO_PARTICLE_INIT,
-  NUKE_PARTICLE_INIT
+  NUKE_PARTICLE_INIT,
 ];
 Object.freeze(__particleInit);
 
@@ -82,7 +82,7 @@ const __particleActions = [
   METHANE_PARTICLE_ACTION,
   TREE_PARTICLE_ACTION,
   CHARGED_NITRO_PARTICLE_ACTION,
-  NUKE_PARTICLE_ACTION
+  NUKE_PARTICLE_ACTION,
 ];
 Object.freeze(__particleActions);
 
@@ -410,7 +410,7 @@ class Tree2 extends TreeType {
     return [
       treeParticle.angle,
       treeParticle.angle + branchAngle,
-      treeParticle.angle - branchAngle
+      treeParticle.angle - branchAngle,
     ];
   }
 
@@ -424,7 +424,7 @@ const TREE_TYPES = [
   Tree0,
   /* A little too cluttered to include Tree1 */
   /* Tree1, */
-  Tree2
+  Tree2,
 ];
 const NUM_TREE_TYPES = TREE_TYPES.length;
 
@@ -620,8 +620,8 @@ class Particle {
   }
 
   /*
-   * For a spherical particle on a trajectory, figure out what element the particle
-   * is about to hit (right at its tip).
+   * For a spherical particle on a trajectory, figure out what element the
+   * particle is about to hit (right at its tip).
    *
    * Expects caller has updated particle's x and y velocity.
    */

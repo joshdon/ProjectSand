@@ -200,8 +200,7 @@ function saveGameCanvas() {
 }
 
 function loadGameCanvas() {
-  if (!gamestateSaved)
-    return;
+  if (!gamestateSaved) return;
 
   particles.inactivateAll();
 
@@ -289,7 +288,7 @@ function mainLoop(now) {
   draw();
 }
 
-window.onload = function() {
+window.onload = function () {
   init();
   mainLoop(0);
 };

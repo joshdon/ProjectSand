@@ -39,23 +39,25 @@
  * where each index represents these four combined values. Due to the endianness
  * of javascript, the byte order for our 32 bit integers is: alpha, b, g, r.
  *
- * We need a *fast* way to map a given 32 bit color to an index in our elementActions
- * array. To do this, we reserve the lowest 2 bits from each of the r, g, and b fields.
- * We then combine these 6 bits together, and treat this value as the index.
- * The human eye won't be able to notice that we've hijacked these lower-ordered 2 bit
- * regions of the r, g, and b channels. Thus, given values of r, g, and b, the index for
- * the color is naturally:
+ * We need a *fast* way to map a given 32 bit color to an index in our
+ * elementActions array. To do this, we reserve the lowest 2 bits from each of
+ * the r, g, and b fields. We then combine these 6 bits together, and treat this
+ * value as the index. The human eye won't be able to notice that we've hijacked
+ * these lower-ordered 2 bit regions of the r, g, and b channels. Thus, given
+ * values of r, g, and b, the index for the color is naturally:
  * (r & 0x3) + (r & 0x300) >>> 6 + (r & 0x30000) >>> 12;
  *
- * This gives us the flexibility of using actual color data, while still allowing us to
- * *quickly* map colors to indices. A dictionary would be far too slow, by several orders
- * of magnitude (given that we need to do a lookup for every pixel on the canvas, ~60-100
- * times per second). Similarly, implementing the elements as classes and calling their
- * class "action" methods would be too slow, and lead to poor FPS.
+ * This gives us the flexibility of using actual color data, while still
+ * allowing us to *quickly* map colors to indices. A dictionary would be far too
+ * slow, by several orders of magnitude (given that we need to do a lookup for
+ * every pixel on the canvas, ~60-100 times per second). Similarly, implementing
+ * the elements as classes and calling their class "action" methods would be too
+ * slow, and lead to poor FPS.
  *
- * Originally, I toyed with using the alpha channel to represent the index, and simply
- * having the canvas ignore alpha. But it turns out that different browers handle "ignoring
- * alpha" differently, and this approach wasn't supported on every browser.
+ * Originally, I toyed with using the alpha channel to represent the index, and
+ * simply having the canvas ignore alpha. But it turns out that different
+ * browers handle "ignoring alpha" differently, and this approach wasn't
+ * supported on every browser.
  */
 var __next_elem_idx = 0;
 function __inGameColor(r, g, b) {
@@ -155,7 +157,7 @@ const elements = new Uint32Array([
   BRANCH,
   LEAF,
   POLLEN,
-  CHARGED_NITRO
+  CHARGED_NITRO,
 ]);
 const elementActions = [
   BACKGROUND_ACTION,
@@ -191,7 +193,7 @@ const elementActions = [
   BRANCH_ACTION,
   LEAF_ACTION,
   POLLEN_ACTION,
-  CHARGED_NITRO_ACTION
+  CHARGED_NITRO_ACTION,
 ];
 Object.freeze(elementActions);
 
@@ -254,7 +256,8 @@ function initElements() {
 function WALL_ACTION(x, y, i) {}
 
 function BACKGROUND_ACTION(x, y, i) {
-  throw "As an optimization, we should never be invoking the action for the background";
+  throw "As an optimization, we should never be invoking the action for the " +
+        "background";
 }
 
 function SAND_ACTION(x, y, i) {
@@ -369,8 +372,7 @@ function FIRE_ACTION(x, y, i) {
     }
 
     /* check for wax separately, since fire doesn't burn wax at corners */
-    if (flameOut && bordering(x, y, i, WAX) !== -1)
-      flameOut = false;
+    if (flameOut && bordering(x, y, i, WAX) !== -1) flameOut = false;
 
     if (flameOut) {
       gameImagedata32[i] = BACKGROUND;
@@ -616,7 +618,7 @@ const __lava_immune = [
   ROCK,
   WATER,
   SALT_WATER,
-  STEAM
+  STEAM,
 ];
 Object.freeze(__lava_immune);
 const __num_lava_immune = __lava_immune.length;

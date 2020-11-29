@@ -296,8 +296,8 @@ class Cursor {
         /*
          * Note that not all pixels will be equal to 'color'; browser will
          * anti-alias the line, which will result in some grayscale colors as
-         * well. So, it is sufficient (and necessary) to consider a pixel colored
-         * as long as it is not black.
+         * well. So, it is sufficient (and necessary) to consider a pixel
+         * colored as long as it is not black.
          */
         if (strokeImageData32[x + offset_relative] !== 0xff000000) {
           const absIdx = x_absolute + offset_absolute;
@@ -336,7 +336,7 @@ class Mouse extends Cursor {
 
   canvasMouseMove(e) {
     const canvas = this.canvas;
-    const getPos = function() {
+    const getPos = function () {
       return Mouse.getMousePos(e, true, canvas);
     };
 
@@ -345,18 +345,18 @@ class Mouse extends Cursor {
 
   canvasMouseEnter(e) {
     const canvas = this.canvas;
-    const getInnerPos = function(self) {
+    const getInnerPos = function (self) {
       return Mouse.getMousePos(e, true, canvas);
     };
-    const getOuterPos = function(self) {
+    const getOuterPos = function (self) {
       return [self.documentX, self.documentY];
     };
 
     super.canvasCursorEnter(getInnerPos, getOuterPos);
 
     /*
-     * relies on the fact that super.CanvasCursorEnter has already fixed prevX/prevY
-     * to be on the canvas border
+     * relies on the fact that super.CanvasCursorEnter has already fixed
+     * prevX/prevY to be on the canvas border
      */
     if (
       this.isDown &&
@@ -370,7 +370,7 @@ class Mouse extends Cursor {
 
   canvasMouseLeave(e) {
     const canvas = this.canvas;
-    const getOuterPos = function(self) {
+    const getOuterPos = function (self) {
       return Mouse.getMousePos(e, false, canvas);
     };
 
@@ -381,7 +381,7 @@ class Mouse extends Cursor {
     if (e.target == onscreenCanvas) return;
 
     const canvas = this.canvas;
-    const getPos = function() {
+    const getPos = function () {
       return Mouse.getMousePos(e, false, canvas);
     };
 
@@ -405,7 +405,7 @@ class Mouse extends Cursor {
     if (e.target == onscreenCanvas) return;
 
     const canvas = this.canvas;
-    const getPos = function() {
+    const getPos = function () {
       return Mouse.getMousePos(e, false, canvas);
     };
 
@@ -575,7 +575,7 @@ class TouchCursor extends Cursor {
 
     if (!pos) return;
 
-    const getPos = function() {
+    const getPos = function () {
       return pos;
     };
 
@@ -624,45 +624,45 @@ function initCursors() {
    * to properly access the 'this' pointer.
    */
   const mouseCursor = new Mouse(onscreenCanvas);
-  onscreenCanvas.onmousedown = function(e) {
+  onscreenCanvas.onmousedown = function (e) {
     mouseCursor.canvasMouseDown(e);
   };
-  onscreenCanvas.onmousemove = function(e) {
+  onscreenCanvas.onmousemove = function (e) {
     mouseCursor.canvasMouseMove(e);
   };
-  onscreenCanvas.onmouseleave = function(e) {
+  onscreenCanvas.onmouseleave = function (e) {
     mouseCursor.canvasMouseLeave(e);
   };
-  onscreenCanvas.onmouseenter = function(e) {
+  onscreenCanvas.onmouseenter = function (e) {
     mouseCursor.canvasMouseEnter(e);
   };
-  document.onmouseup = function(e) {
+  document.onmouseup = function (e) {
     mouseCursor.documentMouseUp(e);
   };
-  document.onmousedown = function(e) {
+  document.onmousedown = function (e) {
     mouseCursor.documentMouseDown(e);
   };
-  document.onmousemove = function(e) {
+  document.onmousemove = function (e) {
     mouseCursor.documentMouseMove(e);
   };
-  document.onkeydown = function(e) {
+  document.onkeydown = function (e) {
     mouseCursor.documentKeyDown(e);
   };
-  document.onkeyup = function(e) {
+  document.onkeyup = function (e) {
     mouseCursor.documentKeyUp(e);
   };
-  document.onvisibilitychange = function(e) {
+  document.onvisibilitychange = function (e) {
     mouseCursor.documentVisibilityChange(e);
   };
 
   const touchCursor = new TouchCursor(onscreenCanvas);
-  onscreenCanvas.addEventListener('touchstart', function(e) {
+  onscreenCanvas.addEventListener("touchstart", function (e) {
     touchCursor.canvasTouchStart(e);
   });
-  onscreenCanvas.addEventListener('touchend', function(e) {
+  onscreenCanvas.addEventListener("touchend", function (e) {
     touchCursor.canvasTouchEnd(e);
   });
-  onscreenCanvas.addEventListener('touchmove', function(e) {
+  onscreenCanvas.addEventListener("touchmove", function (e) {
     touchCursor.canvasTouchMove(e);
   });
 

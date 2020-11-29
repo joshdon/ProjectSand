@@ -24,13 +24,14 @@ const PEN_SIZE_LABELS = ["1px", "2px", "4px", "8px", "16px", "32px"];
 const DEFAULT_PEN_IDX = 1;
 
 /* Elements listed in the menu */
+// prettier-ignore
 const elementMenuItems = [
   WALL, SAND, WATER, PLANT,
   FIRE, SPOUT, WELL, SALT,
   OIL, WAX, TORCH, ICE,
   GUNPOWDER, NAPALM, NITRO, C4,
   LAVA, CRYO, FUSE, MYSTERY,
-  CONCRETE, METHANE, SOIL, BACKGROUND
+  CONCRETE, METHANE, SOIL, BACKGROUND,
 ];
 
 const menuNames = {};
@@ -117,7 +118,7 @@ function initMenu() {
           ")";
       elemButton.style.color = elemMenuColor;
 
-      elemButton.addEventListener("click", function() {
+      elemButton.addEventListener("click", function () {
         document
           .getElementById(SELECTED_ELEM.toString())
           .classList.remove("selectedElementMenuButton");
@@ -142,7 +143,7 @@ function initMenu() {
     }
     pensizes.add(p);
   }
-  pensizes.addEventListener("change", function() {
+  pensizes.addEventListener("change", function () {
     PENSIZE = parseInt(pensizes.value, 10);
   });
 
@@ -151,13 +152,13 @@ function initMenu() {
     document.getElementById("spigot1Type"),
     document.getElementById("spigot2Type"),
     document.getElementById("spigot3Type"),
-    document.getElementById("spigot4Type")
+    document.getElementById("spigot4Type"),
   ];
   const spigotSizes = [
     document.getElementById("spigot1Size"),
     document.getElementById("spigot2Size"),
     document.getElementById("spigot3Size"),
-    document.getElementById("spigot4Size")
+    document.getElementById("spigot4Size"),
   ];
   if (spigotTypes.length !== spigotSizes.length) throw "should be same length";
   for (i = 0; i < spigotTypes.length; i++) {
@@ -186,35 +187,35 @@ function initMenu() {
       sizeSelector.add(option);
     }
   }
-  spigotTypes[0].addEventListener("change", function() {
+  spigotTypes[0].addEventListener("change", function () {
     SPIGOT_ELEMENTS[0] = parseInt(spigotTypes[0].value, 10);
   });
-  spigotTypes[1].addEventListener("change", function() {
+  spigotTypes[1].addEventListener("change", function () {
     SPIGOT_ELEMENTS[1] = parseInt(spigotTypes[1].value, 10);
   });
-  spigotTypes[2].addEventListener("change", function() {
+  spigotTypes[2].addEventListener("change", function () {
     SPIGOT_ELEMENTS[2] = parseInt(spigotTypes[2].value, 10);
   });
-  spigotTypes[3].addEventListener("change", function() {
+  spigotTypes[3].addEventListener("change", function () {
     SPIGOT_ELEMENTS[3] = parseInt(spigotTypes[3].value, 10);
   });
-  spigotSizes[0].addEventListener("change", function() {
+  spigotSizes[0].addEventListener("change", function () {
     SPIGOT_SIZES[0] = parseInt(spigotSizes[0].value, 10);
   });
-  spigotSizes[1].addEventListener("change", function() {
+  spigotSizes[1].addEventListener("change", function () {
     SPIGOT_SIZES[1] = parseInt(spigotSizes[1].value, 10);
   });
-  spigotSizes[2].addEventListener("change", function() {
+  spigotSizes[2].addEventListener("change", function () {
     SPIGOT_SIZES[2] = parseInt(spigotSizes[2].value, 10);
   });
-  spigotSizes[3].addEventListener("change", function() {
+  spigotSizes[3].addEventListener("change", function () {
     SPIGOT_SIZES[3] = parseInt(spigotSizes[3].value, 10);
   });
 
   /* 'overwrite' checkbox */
   const overwriteCheckbox = document.getElementById("overwriteCheckbox");
   overwriteCheckbox.checked = OVERWRITE_ENABLED;
-  overwriteCheckbox.addEventListener("click", function() {
+  overwriteCheckbox.addEventListener("click", function () {
     OVERWRITE_ENABLED = overwriteCheckbox.checked;
   });
 
@@ -223,7 +224,7 @@ function initMenu() {
   speedSlider.min = 0;
   speedSlider.max = MAX_FPS;
   speedSlider.value = DEFAULT_FPS;
-  speedSlider.addEventListener("input", function() {
+  speedSlider.addEventListener("input", function () {
     const val = parseInt(speedSlider.value, 10);
     /* make 'magnetic' towards the default */
     if (Math.abs(val - DEFAULT_FPS) < 10) speedSlider.value = DEFAULT_FPS;
