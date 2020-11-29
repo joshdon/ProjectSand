@@ -114,6 +114,7 @@ const BRANCH = __inGameColor(166, 128, 100);
 const LEAF = __inGameColor(82, 107, 45);
 const POLLEN = __inGameColor(230, 235, 110);
 const CHARGED_NITRO = __inGameColor(245, 98, 78);
+const ACID = __inGameColor(157, 240, 40);
 
 /*
  * It would be nice to combine the elements and elementActions
@@ -158,6 +159,7 @@ const elements = new Uint32Array([
   LEAF,
   POLLEN,
   CHARGED_NITRO,
+  ACID,
 ]);
 const elementActions = [
   BACKGROUND_ACTION,
@@ -194,6 +196,7 @@ const elementActions = [
   LEAF_ACTION,
   POLLEN_ACTION,
   CHARGED_NITRO_ACTION,
+  ACID_ACTION,
 ];
 Object.freeze(elementActions);
 
@@ -248,6 +251,7 @@ function initElements() {
   GAS_PERMEABLE[WET_SOIL] = null;
   GAS_PERMEABLE[POLLEN] = null;
   GAS_PERMEABLE[CHARGED_NITRO] = null;
+  GAS_PERMEABLE[ACID] = null;
   Object.freeze(GAS_PERMEABLE);
 }
 
@@ -1030,6 +1034,73 @@ function CHARGED_NITRO_ACTION(x, y, i) {
     gameImagedata32[i] = FIRE;
     return;
   }
+}
+
+function ACID_ACTION(x, y, i) {
+  /* Dissolve a bordering element */
+  if (random() < 10) {
+    const up = y > 0 ? y - 1 : -1;
+    const down = y < MAX_Y_IDX ? y + 1 : -1;
+    const left = x > 0 ? x - 1 : -1;
+    const right = x < MAX_X_IDX ? x + 1 : -1;
+    const xLocs = [left, right, x];
+    const yLocs = [down, up, y];
+    /* Don't bias left/right or up/down */
+    if (random() < 50) {
+      xLocs[0] = right;
+      xLocs[1] = left;
+    }
+    if (random() < 50) {
+      yLocs[0] = up;
+      yLocs[1] = down;
+    }
+    var xLocsIter, yLocsIter;
+    for (yLocsIter = 0; yLocsIter !== 3; yLocsIter++) {
+      const yIter = yLocs[yLocsIter];
+      if (yIter === -1) continue;
+
+      if (random() < 25 && yIter !== down)
+        continue;
+
+      const idxBase = yIter * width;
+      for (xLocsIter = 0; xLocsIter !== 3; xLocsIter++) {
+        const xIter = xLocs[xLocsIter];
+        if (xIter === -1) continue;
+
+        if (yIter === y && xIter === x) continue;
+
+        /* Don't consider corners */
+        if (xIter !== x && yIter !== y) continue;
+
+        const idx = idxBase + xIter;
+        const borderingElem = gameImagedata32[idx];
+
+        if (borderingElem === ACID ||
+            borderingElem === BACKGROUND ||
+            borderingElem === WATER ||
+            borderingElem === SALT_WATER ||
+            borderingElem === ICE ||
+            borderingElem === CHILLED_ICE ||
+            borderingElem === CRYO)
+          continue;
+
+        if (yIter !== y + 1) {
+          gameImagedata32[idx] = BACKGROUND;
+          return;
+        }
+
+        gameImagedata32[i] = BACKGROUND;
+        if (borderingElem !== WALL || random() < 75)
+          gameImagedata32[idx] = ACID;
+        return;
+      }
+    }
+  }
+
+  if (doDensityLiquid(x, y, i, WATER, 25, 30)) return;
+  if (doDensityLiquid(x, y, i, SALT_WATER, 25, 30)) return;
+
+  if (doGravity(x, y, i, true, 100)) return;
 }
 
 /*  =============================== Helpers =============================== */

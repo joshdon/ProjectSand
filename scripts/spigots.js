@@ -29,6 +29,7 @@ const SPIGOT_ELEMENT_OPTIONS = [
   CONCRETE,
   LAVA,
   CRYO,
+  ACID,
   MYSTERY,
 ];
 const SPIGOT_SIZE_OPTIONS = [0, 5, 10, 15, 20, 25];
