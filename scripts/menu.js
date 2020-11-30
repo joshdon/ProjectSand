@@ -32,7 +32,7 @@ const elementMenuItems = [
   GUNPOWDER, NAPALM, NITRO, C4,
   LAVA, CRYO, FUSE, MYSTERY,
   CONCRETE, METHANE, SOIL, ACID,
-  BACKGROUND,
+  THERMITE, BACKGROUND,
 ];
 
 const menuNames = {};
@@ -61,6 +61,7 @@ menuNames[CRYO] = "CRYO";
 menuNames[MYSTERY] = "???";
 menuNames[SOIL] = "SOIL";
 menuNames[ACID] = "ACID";
+menuNames[THERMITE] = "THERMITE";
 
 /*
  * Some element colors do not have very good contrast against

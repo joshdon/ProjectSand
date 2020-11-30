@@ -115,6 +115,8 @@ const LEAF = __inGameColor(82, 107, 45);
 const POLLEN = __inGameColor(230, 235, 110);
 const CHARGED_NITRO = __inGameColor(245, 98, 78);
 const ACID = __inGameColor(157, 240, 40);
+const THERMITE = __inGameColor(195, 140, 70);
+const BURNING_THERMITE = __inGameColor(255, 130, 130);
 
 /*
  * It would be nice to combine the elements and elementActions
@@ -160,6 +162,8 @@ const elements = new Uint32Array([
   POLLEN,
   CHARGED_NITRO,
   ACID,
+  THERMITE,
+  BURNING_THERMITE,
 ]);
 const elementActions = [
   BACKGROUND_ACTION,
@@ -197,6 +201,8 @@ const elementActions = [
   POLLEN_ACTION,
   CHARGED_NITRO_ACTION,
   ACID_ACTION,
+  THERMITE_ACTION,
+  BURNING_THERMITE_ACTION,
 ];
 Object.freeze(elementActions);
 
@@ -297,9 +303,12 @@ function FIRE_ACTION(x, y, i) {
     var waterLoc = bordering(x, y, i, WATER);
     if (waterLoc === -1) waterLoc = bordering(x, y, i, SALT_WATER);
     if (waterLoc !== -1) {
-      gameImagedata32[waterLoc] = STEAM;
-      gameImagedata32[i] = BACKGROUND;
-      return;
+      /* A thermite fire is not extinguished by water */
+      if (bordering(x, y, i, BURNING_THERMITE) === -1) {
+        gameImagedata32[waterLoc] = STEAM;
+        gameImagedata32[i] = BACKGROUND;
+        return;
+      }
     }
   }
 
@@ -366,6 +375,17 @@ function FIRE_ACTION(x, y, i) {
           break;
         }
 
+        /*
+         * Wax doesn't burn at corners; flameout unles we're directly
+         * touching it.
+         */
+        if (xIter == x || yIter == y) {
+          if (borderingElem === WAX) {
+            flameOut = false;
+            break;
+          }
+        }
+
         if (borderingElem === OIL && random() < 50) {
           flameOut = false;
           break;
@@ -374,9 +394,6 @@ function FIRE_ACTION(x, y, i) {
 
       if (!flameOut) break;
     }
-
-    /* check for wax separately, since fire doesn't burn wax at corners */
-    if (flameOut && bordering(x, y, i, WAX) !== -1) flameOut = false;
 
     if (flameOut) {
       gameImagedata32[i] = BACKGROUND;
@@ -1101,6 +1118,80 @@ function ACID_ACTION(x, y, i) {
   if (doDensityLiquid(x, y, i, SALT_WATER, 25, 30)) return;
 
   if (doGravity(x, y, i, true, 100)) return;
+}
+
+function THERMITE_ACTION(x, y, i) {
+  if (surroundedByAdjacent(x, y, i, THERMITE)) return;
+
+  /* Chance to turn into BURNING_THERMITE if near fire */
+  if (random() < 50) {
+    if (borderingAdjacent(x, y, i, FIRE) !== -1) {
+      gameImagedata32[i] = BURNING_THERMITE;
+      return;
+    }
+  }
+
+  if (doDensitySink(x, y, i, WATER, false, 95)) return;
+  if (doDensitySink(x, y, i, SALT_WATER, false, 95)) return;
+  if (doDensitySink(x, y, i, OIL, false, 95)) return;
+
+  if (doGravity(x, y, i, false, 99)) return;
+}
+
+function BURNING_THERMITE_ACTION(x, y, i) {
+  const aboveIdx = y > 0 ? i - width : -1;
+  const leftIdx = x > 0 ? i - 1 : -1;
+  const rightIdx = x < MAX_X_IDX ? i + 1 : -1;
+  const burnLocs = [aboveIdx, leftIdx, rightIdx];
+  var iter;
+  for (iter = 0; iter !== 3; iter++) {
+    const burnLoc = burnLocs[iter];
+    if (burnLoc === -1) continue;
+
+    const elem = gameImagedata32[burnLoc];
+    if (elem !== THERMITE &&
+        elem !== BURNING_THERMITE &&
+        elem !== LAVA &&
+        elem !== WALL) {
+      gameImagedata32[burnLoc] = FIRE;
+    }
+  }
+
+  if (random() < 2 && random() < 7) {
+    particles.addActiveParticle(CHARGED_NITRO_PARTICLE, x, y, i);
+    gameImagedata32[i] = FIRE;
+    return;
+  }
+
+  /* Chance to consume */
+  if (random() < 2) {
+    gameImagedata32[i] = FIRE;
+    return;
+  }
+
+  /* Burn through WALL */
+  if (random() < 8) {
+    const adjWall = adjacent(x, i, WALL);
+    if (adjWall !== -1)
+      gameImagedata32[adjWall] = BACKGROUND;
+
+    const belowWall = below(y, i, WALL);
+    if (belowWall !== -1)
+      gameImagedata32[belowWall] = BACKGROUND;
+  }
+
+  /*
+   * Need to be able to fall through a fire set by by a neighbor in the
+   * (x +- 1, y + 1) position.
+   */
+  const belowFire = below(y, i, FIRE);
+  if (belowFire !== -1)
+    gameImagedata32[belowFire] = BACKGROUND;
+  if (doGravity(x, y, i, false, 99)) return;
+
+  if (doDensitySink(x, y, i, WATER, false, 95)) return;
+  if (doDensitySink(x, y, i, SALT_WATER, false, 95)) return;
+  if (doDensitySink(x, y, i, OIL, false, 95)) return;
 }
 
 /*  =============================== Helpers =============================== */
