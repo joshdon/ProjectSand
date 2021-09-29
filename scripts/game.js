@@ -39,7 +39,7 @@ const onscreenCtx = onscreenCanvas.getContext("2d", { alpha: false });
 const gameCanvas = document.createElement("canvas");
 gameCanvas.width = width;
 gameCanvas.height = height;
-const gameCtx = gameCanvas.getContext("2d", { alpha: false });
+const gameCtx = gameCanvas.getContext("2d");
 const gameImagedata = gameCtx.createImageData(width, height);
 const gameImagedata32 = new Uint32Array(gameImagedata.data.buffer);
 
