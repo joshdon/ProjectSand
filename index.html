@@ -65,6 +65,11 @@
         <label for="speedSlider">Speed</label>
         <input type="range" id="speedSlider">
       </div>
+      <div id="zombieSliderDiv">
+        <label for="zombieSlider">Zombies</label>
+        <input type="range" id="zombieSlider">
+        <span id="zombieCount">0</span>
+      </div>
       <div class="optionButtonContainer">
         <input id="saveButton" class="optionButton" type="button" value="Save">
         <input id="loadButton" class="optionButton" type="button" value="Load">
@@ -78,6 +83,7 @@
   </div>
 </div>
 
+<script type="text/javascript" src="scripts/third_party/matter.min.js"></script>
 <script type="text/javascript" src="scripts/util.js"></script>
 <script type="text/javascript" src="scripts/canvasConfig.js"></script>
 <script type="text/javascript" src="scripts/cursor.js"></script>
@@ -85,6 +91,8 @@
 <script type="text/javascript" src="scripts/elements.js"></script>
 <script type="text/javascript" src="scripts/spigots.js"></script>
 <script type="text/javascript" src="scripts/menu.js"></script>
+<script type="text/javascript" src="scripts/softBody.js"></script>
+<script type="text/javascript" src="scripts/zombies.js"></script>
 <script type="text/javascript" src="scripts/game.js"></script>
 
 </html>

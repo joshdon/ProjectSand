@@ -46,6 +46,8 @@ class Cursor {
     this.y = 0;
     this.prevX = 0;
     this.prevY = 0;
+    this.initX = 0;
+    this.initY = 0;
 
     /*
      * documentX and documentY are coordinates relative to the canvas, but
@@ -59,6 +61,15 @@ class Cursor {
     this.canvas = canvas;
   }
 
+  notifyCursorUp() {
+    /*
+     * If drawStroke() adjusted the mouse offset, we need to move it back.
+     */
+    if (softBodyMouse.offset.x != 0) {
+      Matter.Mouse.setOffset(softBodyMouse, {x: 0, y: 0});
+    }
+  }
+
   canvasCursorDown(x, y) {
     this.isDown = true;
     this.inCanvas = true;
@@ -67,6 +78,8 @@ class Cursor {
     this.prevY = y;
     this.x = x;
     this.y = y;
+    this.initX = x;
+    this.initY = y;
   }
 
   canvasCursorMove(getPos) {
@@ -120,6 +133,7 @@ class Cursor {
 
   documentCursorUp() {
     this.isDown = false;
+    this.notifyCursorUp();
   }
 
   documentCursorDown(e, getPos) {
@@ -135,6 +149,9 @@ class Cursor {
      */
     this.prevX = this.x;
     this.prevY = this.y;
+
+    this.initX = this.x;
+    this.initY = this.y;
 
     const pos = getPos(this);
     this.documentX = pos[0];
@@ -203,6 +220,24 @@ class Cursor {
     }
 
     const color = SELECTED_ELEM;
+
+    /* We only want to drag zombies, not draw them */
+    if (color === ZOMBIE) {
+      return;
+    }
+
+    /*
+     * A bit of a hack, but the goal is to avoid triggering soft body dragging if
+     * we're already drawing an element stroke. There are two parts to the hack.
+     * Part 1 is detection by using a rough heuristic of whether the cursor has
+     * moved enough since the last stroke draw. Part 2 is "disabling" the soft body
+     * mouse by moving it outside the canvas.
+     */
+    if (softBodyMouse.offset.x === 0 &&
+        Math.pow(this.initX - this.x, 2) + Math.pow(this.initY - this.y, 2) > Math.pow(20, 2)) {
+      Matter.Mouse.setOffset(softBodyMouse, {x: width + 1, y: height + 1});
+    }
+
     const overwrite = OVERWRITE_ENABLED || color === BACKGROUND;
     const r = color & 0xff;
     const g = (color & 0xff00) >>> 8;

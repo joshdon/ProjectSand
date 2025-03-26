@@ -28,3 +28,15 @@ const MAX_FPS = 120;
 const DEFAULT_FPS = 60;
 
 const MAX_NUM_PARTICLES = 1000;
+
+/*
+ * The zombie animation speed is tied to the FPS setting of the game;
+ * speeding or slowing the FPS will also change the zombie animation
+ * speed. The following value provides the baseline speed, which then
+ * becomes scaled by the FPS. Note that the animation engine has a limit
+ * to how much it can simulate in each step, so the following value should
+ * not be made too large.
+ */
+const ZOMBIE_ANIMATION_SPEED = 12;
+
+const MAX_ZOMBIES = 100;

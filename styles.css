@@ -127,6 +127,22 @@ a:hover {
   -webkit-appearance: none;
 }
 
+#zombieSliderDiv {
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
+
+#zombieSlider {
+  width: 50px;
+  height: 10px;
+  border-radius: 5px;
+  outline: none;
+}
+
+#zombieCount {
+  color: white;
+}
+
 #optionsCol2 {
   padding-left: 4px;
 }

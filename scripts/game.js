@@ -75,6 +75,7 @@ function init() {
   initParticles();
   initSpigots();
   initMenu();
+  initSoftBody();
 
   /* Initialize imagedata */
   const len = gameImagedata32.length;
@@ -96,7 +97,6 @@ function setFPS(fps) {
   if (fps > 0) msPerFrame = 1000.0 / fpsSetting;
   else drawFPSLabel(0);
 }
-
 function updateGame() {
   updateSpigots();
   updateParticles();
@@ -259,18 +259,26 @@ function mainLoop(now) {
    * Always update the user stroke, regardless of whether
    * we're updating the gamestate. This results in smooth
    * drawing regardless of the current set FPS.
+   *
+   * Stop drawing the stroke if we're dragging a soft body,
+   * since we don't want both at once.
    */
-  updateUserStroke();
+  if (!softBodyDragStart) {
+    updateUserStroke();
+  }
 
+  var framesUpdated = 0;
   if (frameDebt >= 1) {
-    if (frameDebt < 2) {
+    if (frameDebt == 1) {
       /* shortcut for the common case of a single-frame update */
       updateGame();
+      framesUpdated++;
     } else {
       /* multi-frame update */
 
       /* first get approx time for a single update */
       const updateTimeMs = executeAndTime(updateGame);
+      framesUpdated++;
 
       /*
        * Approx time for doing stroke, draw, etc.
@@ -281,8 +289,14 @@ function mainLoop(now) {
       while (timeRemaining > updateTimeMs && frameDebt >= 1) {
         updateGame();
         timeRemaining -= updateTimeMs;
+        framesUpdated++;
       }
     }
+  }
+
+  if (framesUpdated) {
+    softBodyAnimate(framesUpdated * ZOMBIE_ANIMATION_SPEED);
+    softBodyRender();
   }
 
   draw();

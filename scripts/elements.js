@@ -117,6 +117,10 @@ const CHARGED_NITRO = __inGameColor(245, 98, 78);
 const ACID = __inGameColor(157, 240, 40);
 const THERMITE = __inGameColor(195, 140, 70);
 const BURNING_THERMITE = __inGameColor(255, 130, 130);
+const ZOMBIE = __inGameColor(236, 223, 245);
+const ZOMBIE_WET = __inGameColor(236, 223, 245);
+const ZOMBIE_BURNING = __inGameColor(250, 130, 130);
+const ZOMBIE_FROZEN = __inGameColor(190, 190, 250);
 
 /*
  * It would be nice to combine the elements and elementActions
@@ -164,6 +168,10 @@ const elements = new Uint32Array([
   ACID,
   THERMITE,
   BURNING_THERMITE,
+  ZOMBIE,
+  ZOMBIE_WET,
+  ZOMBIE_BURNING,
+  ZOMBIE_FROZEN,
 ]);
 const elementActions = [
   BACKGROUND_ACTION,
@@ -203,6 +211,10 @@ const elementActions = [
   ACID_ACTION,
   THERMITE_ACTION,
   BURNING_THERMITE_ACTION,
+  ZOMBIE_ACTION,
+  ZOMBIE_WET_ACTION,
+  ZOMBIE_BURNING_ACTION,
+  ZOMBIE_FROZEN_ACTION,
 ];
 Object.freeze(elementActions);
 
@@ -369,7 +381,8 @@ function FIRE_ACTION(x, y, i) {
           borderingElem === PLANT ||
           borderingElem === FUSE ||
           borderingElem === BRANCH ||
-          borderingElem === LEAF
+          borderingElem === LEAF ||
+          borderingElem === ZOMBIE
         ) {
           flameOut = false;
           break;
@@ -1192,6 +1205,61 @@ function BURNING_THERMITE_ACTION(x, y, i) {
   if (doDensitySink(x, y, i, WATER, false, 95)) return;
   if (doDensitySink(x, y, i, SALT_WATER, false, 95)) return;
   if (doDensitySink(x, y, i, OIL, false, 95)) return;
+}
+
+function ZOMBIE_ACTION(x, y, i) {
+  if (bordering(x, y, i, FIRE) !== -1) {
+    const empty_spot = bordering(x, y, i, BACKGROUND);
+    if (empty_spot !== -1) {
+      gameImagedata32[empty_spot] = FIRE;
+    }
+    gameImagedata32[i] = FIRE;
+    return;
+  }
+
+  gameImagedata32[i] = BACKGROUND;
+}
+
+function ZOMBIE_WET_ACTION(x, y, i) {
+  var fireLoc = aboveAdjacent(x, y, i, FIRE);
+  if (fireLoc !== -1) {
+    gameImagedata32[fireLoc] = BACKGROUND;
+  }
+  fireLoc = adjacent(x, i, FIRE);
+  if (fireLoc !== -1) {
+    gameImagedata32[fireLoc] = BACKGROUND;
+  }
+  fireLoc = belowAdjacent(x, y, i, FIRE);
+  if (fireLoc !== -1) {
+    gameImagedata32[fireLoc] = BACKGROUND;
+  }
+
+  const iceLoc = bordering(x, y, i, ICE);
+  if (iceLoc !== -1) {
+    gameImagedata32[iceLoc] = WATER;
+  }
+
+  gameImagedata32[i] = BACKGROUND;
+}
+
+function ZOMBIE_BURNING_ACTION(x, y, i) {
+  if (borderingAdjacent(x, y, i, WATER) === -1) {
+    doProducer(x, y, i, FIRE, true, 10);
+  } else {
+    /*
+     * I found that without this, it was much harder to extinguish
+     * a burning zombie.
+     */
+    const backgroundLoc = bordering(x, y, i, BACKGROUND);
+    if (backgroundLoc !== -1) {
+      gameImagedata32[i] = WATER;
+    }
+  }
+  gameImagedata32[i] = BACKGROUND;
+}
+
+function ZOMBIE_FROZEN_ACTION(x, y, i) {
+  gameImagedata32[i] = BACKGROUND;
 }
 
 /*  =============================== Helpers =============================== */

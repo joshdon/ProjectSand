@@ -32,7 +32,7 @@ const elementMenuItems = [
   GUNPOWDER, NAPALM, NITRO, C4,
   LAVA, CRYO, FUSE, MYSTERY,
   CONCRETE, METHANE, SOIL, ACID,
-  THERMITE, BACKGROUND,
+  THERMITE, BACKGROUND, ZOMBIE,
 ];
 
 const menuNames = {};
@@ -62,6 +62,7 @@ menuNames[MYSTERY] = "???";
 menuNames[SOIL] = "SOIL";
 menuNames[ACID] = "ACID";
 menuNames[THERMITE] = "THERMITE";
+menuNames[ZOMBIE] = "HAND";
 
 /*
  * Some element colors do not have very good contrast against
@@ -234,6 +235,16 @@ function initMenu() {
     setFPS(parseInt(speedSlider.value, 10));
   });
 
+  /* zombie slider */
+  const zombieSlider = document.getElementById("zombieSlider");
+  zombieSlider.min = 0;
+  zombieSlider.max = MAX_ZOMBIES;
+  zombieSlider.value = 0;
+  zombieSlider.addEventListener("input", function () {
+    const val = parseInt(zombieSlider.value, 10);
+    setZombieCount(parseInt(zombieSlider.value, 10));
+  });
+
   /* clear button */
   const clearButton = document.getElementById("clearButton");
   clearButton.onclick = clearGameCanvas;
@@ -249,4 +260,8 @@ function initMenu() {
 
 function drawFPSLabel(fps) {
   document.getElementById("fps-counter").innerText = "FPS: " + fps;
+}
+
+function drawZombieCount(val) {
+  document.getElementById("zombieCount").innerText = val;
 }

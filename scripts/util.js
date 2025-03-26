@@ -47,6 +47,15 @@ function random() {
   return r;
 }
 
+/* Returns a random int in range [low, high) */
+function randomIntInRange(low, high) {
+  return Math.floor(Math.random() * (high - low) + low);
+}
+
+function clamp(val, min, max) {
+  return Math.max(min, Math.min(val, max));
+}
+
 function executeAndTime(func) {
   const start = performance.now();
   func();
