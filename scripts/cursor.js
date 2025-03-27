@@ -309,18 +309,22 @@ class Cursor {
   }
 }
 
-class Mouse extends Cursor {
+/*
+ * Note: the name "Mouse" conflicts with the declaration from matter.js,
+ * so we use MouseCursor.
+ */
+class MouseCursor extends Cursor {
   constructor(canvas) {
     super(canvas);
 
     this.shiftStartX = 0;
     this.shiftStartY = 0;
     this.shiftPressed = false;
-    this.lineDirection = Mouse.NO_DIRECTION; /* for use with shift key */
+    this.lineDirection = MouseCursor.NO_DIRECTION; /* for use with shift key */
   }
 
   canvasMouseDown(e) {
-    const mousePos = Mouse.getMousePos(e, true, this.canvas);
+    const mousePos = MouseCursor.getMousePos(e, true, this.canvas);
 
     /* Fix bug that left the canvas stuck in "shift" mode */
     if (this.shiftPressed && !e.shiftKey) this.shiftPressed = false;
@@ -328,7 +332,7 @@ class Mouse extends Cursor {
     if (this.shiftPressed) {
       this.shiftStartX = mousePos[0];
       this.shiftStartY = mousePos[1];
-      this.lineDirection = Mouse.NO_DIRECTION;
+      this.lineDirection = MouseCursor.NO_DIRECTION;
     }
 
     super.canvasCursorDown(mousePos[0], mousePos[1]);
@@ -337,7 +341,7 @@ class Mouse extends Cursor {
   canvasMouseMove(e) {
     const canvas = this.canvas;
     const getPos = function () {
-      return Mouse.getMousePos(e, true, canvas);
+      return MouseCursor.getMousePos(e, true, canvas);
     };
 
     super.canvasCursorMove(getPos);
@@ -346,7 +350,7 @@ class Mouse extends Cursor {
   canvasMouseEnter(e) {
     const canvas = this.canvas;
     const getInnerPos = function (self) {
-      return Mouse.getMousePos(e, true, canvas);
+      return MouseCursor.getMousePos(e, true, canvas);
     };
     const getOuterPos = function (self) {
       return [self.documentX, self.documentY];
@@ -361,7 +365,7 @@ class Mouse extends Cursor {
     if (
       this.isDown &&
       this.shiftPressed &&
-      this.lineDirection === Mouse.NO_DIRECTION
+      this.lineDirection === MouseCursor.NO_DIRECTION
     ) {
       this.shiftStartX = this.prevX;
       this.shiftStartY = this.prevY;
@@ -371,7 +375,7 @@ class Mouse extends Cursor {
   canvasMouseLeave(e) {
     const canvas = this.canvas;
     const getOuterPos = function (self) {
-      return Mouse.getMousePos(e, false, canvas);
+      return MouseCursor.getMousePos(e, false, canvas);
     };
 
     super.canvasCursorLeave(getOuterPos);
@@ -382,7 +386,7 @@ class Mouse extends Cursor {
 
     const canvas = this.canvas;
     const getPos = function () {
-      return Mouse.getMousePos(e, false, canvas);
+      return MouseCursor.getMousePos(e, false, canvas);
     };
 
     super.documentCursorMove(getPos);
@@ -395,7 +399,7 @@ class Mouse extends Cursor {
      */
     e = null;
 
-    this.lineDirection = Mouse.NO_DIRECTION;
+    this.lineDirection = MouseCursor.NO_DIRECTION;
 
     super.documentCursorUp();
   }
@@ -406,13 +410,13 @@ class Mouse extends Cursor {
 
     const canvas = this.canvas;
     const getPos = function () {
-      return Mouse.getMousePos(e, false, canvas);
+      return MouseCursor.getMousePos(e, false, canvas);
     };
 
     /* Fix bug that left the canvas stuck in "shift" mode */
     if (this.shiftPressed && !e.shiftKey) this.shiftPressed = false;
 
-    if (this.shiftPressed) this.lineDirection = Mouse.NO_DIRECTION;
+    if (this.shiftPressed) this.lineDirection = MouseCursor.NO_DIRECTION;
 
     super.documentCursorDown(e, getPos);
   }
@@ -443,7 +447,7 @@ class Mouse extends Cursor {
     if (this.shiftPressed) return;
 
     this.shiftPressed = true;
-    this.lineDirection = Mouse.NO_DIRECTION;
+    this.lineDirection = MouseCursor.NO_DIRECTION;
 
     if (!this.isDown) return;
 
@@ -482,7 +486,7 @@ class Mouse extends Cursor {
       if (this.prevX === this.x && this.prevY === this.y) return;
     }
 
-    if (this.lineDirection === Mouse.NO_DIRECTION) {
+    if (this.lineDirection === MouseCursor.NO_DIRECTION) {
       if (!this.inCanvas) return false;
 
       const dx = this.x - this.shiftStartX;
@@ -494,29 +498,29 @@ class Mouse extends Cursor {
       if (Math.max(absDx, absDy) < 8) return true;
 
       if (Math.abs(absDx - absDy) < 5) {
-        if (dy * dx < 0) this.lineDirection = Mouse.DIAGONAL_DOWN;
-        else this.lineDirection = Mouse.DIAGONAL_UP;
+        if (dy * dx < 0) this.lineDirection = MouseCursor.DIAGONAL_DOWN;
+        else this.lineDirection = MouseCursor.DIAGONAL_UP;
       } else if (absDx > absDy) {
-        this.lineDirection = Mouse.HORIZONTAL;
+        this.lineDirection = MouseCursor.HORIZONTAL;
       } else {
-        this.lineDirection = Mouse.VERTICAL;
+        this.lineDirection = MouseCursor.VERTICAL;
       }
     }
 
     const direction = this.lineDirection;
-    if (direction === Mouse.HORIZONTAL) {
+    if (direction === MouseCursor.HORIZONTAL) {
       this.prevY = this.shiftStartY;
       this.y = this.shiftStartY;
-    } else if (direction === Mouse.VERTICAL) {
+    } else if (direction === MouseCursor.VERTICAL) {
       this.prevX = this.shiftStartX;
       this.x = this.shiftStartX;
     } else if (
-      direction === Mouse.DIAGONAL_DOWN ||
-      direction === Mouse.DIAGONAL_UP
+      direction === MouseCursor.DIAGONAL_DOWN ||
+      direction === MouseCursor.DIAGONAL_UP
     ) {
       this.prevX = this.shiftStartX;
       this.prevY = this.shiftStartY;
-      const slope = direction === Mouse.DIAGONAL_DOWN ? -1 : 1;
+      const slope = direction === MouseCursor.DIAGONAL_DOWN ? -1 : 1;
       const yIntercept = this.shiftStartY - slope * this.shiftStartX;
 
       const yAdjusted = slope * this.x + yIntercept;
@@ -613,46 +617,46 @@ function initCursors() {
   OVERWRITE_ENABLED = true;
 
   /* Set up direction constants for drawing straight lines */
-  Mouse.NO_DIRECTION = 0;
-  Mouse.HORIZONTAL = 1;
-  Mouse.VERTICAL = 2;
-  Mouse.DIAGONAL_UP = 3;
-  Mouse.DIAGONAL_DOWN = 4;
+  MouseCursor.NO_DIRECTION = 0;
+  MouseCursor.HORIZONTAL = 1;
+  MouseCursor.VERTICAL = 2;
+  MouseCursor.DIAGONAL_UP = 3;
+  MouseCursor.DIAGONAL_DOWN = 4;
 
   /*
    * Setting the event handler functions in this way allows the handlers
    * to properly access the 'this' pointer.
    */
-  const mouseCursor = new Mouse(onscreenCanvas);
+  const mouse = new MouseCursor(onscreenCanvas);
   onscreenCanvas.onmousedown = function (e) {
-    mouseCursor.canvasMouseDown(e);
+    mouse.canvasMouseDown(e);
   };
   onscreenCanvas.onmousemove = function (e) {
-    mouseCursor.canvasMouseMove(e);
+    mouse.canvasMouseMove(e);
   };
   onscreenCanvas.onmouseleave = function (e) {
-    mouseCursor.canvasMouseLeave(e);
+    mouse.canvasMouseLeave(e);
   };
   onscreenCanvas.onmouseenter = function (e) {
-    mouseCursor.canvasMouseEnter(e);
+    mouse.canvasMouseEnter(e);
   };
   document.onmouseup = function (e) {
-    mouseCursor.documentMouseUp(e);
+    mouse.documentMouseUp(e);
   };
   document.onmousedown = function (e) {
-    mouseCursor.documentMouseDown(e);
+    mouse.documentMouseDown(e);
   };
   document.onmousemove = function (e) {
-    mouseCursor.documentMouseMove(e);
+    mouse.documentMouseMove(e);
   };
   document.onkeydown = function (e) {
-    mouseCursor.documentKeyDown(e);
+    mouse.documentKeyDown(e);
   };
   document.onkeyup = function (e) {
-    mouseCursor.documentKeyUp(e);
+    mouse.documentKeyUp(e);
   };
   document.onvisibilitychange = function (e) {
-    mouseCursor.documentVisibilityChange(e);
+    mouse.documentVisibilityChange(e);
   };
 
   const touchCursor = new TouchCursor(onscreenCanvas);
@@ -666,7 +670,7 @@ function initCursors() {
     touchCursor.canvasTouchMove(e);
   });
 
-  CURSORS.push(mouseCursor);
+  CURSORS.push(mouse);
   CURSORS.push(touchCursor);
   Object.freeze(CURSORS);
 }
