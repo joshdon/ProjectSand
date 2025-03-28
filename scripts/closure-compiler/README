@@ -1,0 +1,13 @@
+ For use with the Google closure compiler, so that we can minify
+ the javascript code that is calling into the matter.js library.
+
+ DISCLAIMER: This is not a complete set of externs, but rather the
+ set of objects and properties currently in use. If you add new
+ calls to other matter.js properties, you must also add a declaration
+ here, or the closure compiler may silently break the code by rewriting
+ things it should not.
+
+
+ The closure compiler can be invoked like so:
+
+npx google-closure-compiler --externs scripts/closure-compiler/externs.js --js scripts/*.js --compilation_level ADVANCED_OPTIMIZATIONS --js_output_file compiled.js
